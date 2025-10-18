@@ -52,6 +52,8 @@ python batch_convert.py
 - Select the input folder containing `.pdf` files.
 - Select an output folder where PNG folders will be created.
 - The script will convert each PDF into PNG files (one PNG per page) and show progress.
+- 
+Or you can just click run.bat
 
 ## Notes
 - Output DPI is set to 300 in the script; change this value in `batch_convert.py` if needed.
