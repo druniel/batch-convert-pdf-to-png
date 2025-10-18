@@ -1,18 +1,18 @@
 import shutil
 from pathlib import Path
 
-# cesta ke složce s podadresáři
+# path
 pngs_dir = Path("../slozky")
 
-# cesta k jednomu PNG souboru, který chceš rozkopírovat
-source_png = Path("../uvod.png")   # změň podle sebe
+# path for the png file which will be copied
+source_png = Path("../uvod.png")
 
 if not source_png.exists():
     raise FileNotFoundError(f"Soubor {source_png} neexistuje!")
 
-# projdi všechny složky v PNGs
+# copy to all folders in path
 for folder in pngs_dir.iterdir():
     if folder.is_dir():
         target_file = folder / source_png.name
         shutil.copy2(source_png, target_file)
-        print(f"✅ {source_png.name} -> {folder}")
+        print(f"{source_png.name} -> {folder}")

@@ -2,12 +2,36 @@ import os
 from pathlib import Path
 from pdf2image import convert_from_path
 from multiprocessing import Pool, cpu_count
+import tkinter as tk
+from tkinter import filedialog, messagebox
+from tqdm import tqdm
+import sys
 
-# složka se všemi PDF
-input_dir = Path("../noty")
-output_dir = Path("../slozky")
+root = tk.Tk()
+root.withdraw()
+
+# function for path selection dialog
+def vyber_slozku(popis):
+    while True:
+        cesta = filedialog.askdirectory(title=popis)
+
+        if cesta:
+            return cesta
+        else:
+            volba = messagebox.askyesno("Nebyla vybrána složka", "Chcete složku vybrat znovu?")
+            if not volba:
+                print("Program ukončen.")
+                sys.exit(0)
+
+# paths
+input_path = vyber_slozku("Vyberte vstupní složku")
+output_path = vyber_slozku("Vyberte výstupní složku")
+
+input_dir = Path(input_path)
+output_dir = Path(output_path)
 output_dir.mkdir(exist_ok=True)
 
+# function to convert pdfs to pngs
 def process_pdf(pdf_file: Path):
     pdf_name = pdf_file.stem
     pdf_out_dir = output_dir / pdf_name
@@ -22,12 +46,15 @@ def process_pdf(pdf_file: Path):
     except Exception as e:
         return f"Chyba: {pdf_file.name} ({e})"
 
+# main logic
 if __name__ == "__main__":
     pdf_files = list(input_dir.glob("*.pdf"))
     print(f"Načteno {len(pdf_files)} PDF souborů")
 
     with Pool(processes=cpu_count()) as pool:
-        results = pool.map(process_pdf, pdf_files)
+        results = list(tqdm(pool.imap(process_pdf, pdf_files), total=len(pdf_files), desc="Zpracování PDF"))
 
     print("\n".join(results))
-    print("✅ Vše hotovo!")
+    print("Vše hotovo!")
+
+root.destroy()
