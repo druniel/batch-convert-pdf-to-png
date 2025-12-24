@@ -26,7 +26,8 @@ def vyber_slozku(popis):
                 sys.exit(0)
 
 # function to convert pdfs to pngs
-def process_pdf(pdf_file: Path):
+def process_pdf(args):
+    pdf_file, output_dir = args
     pdf_name = pdf_file.stem
     pdf_out_dir = output_dir / pdf_name
     pdf_out_dir.mkdir(exist_ok=True)
@@ -51,9 +52,10 @@ if __name__ == "__main__":
     
     pdf_files = list(input_dir.glob("*.pdf"))
     print(f"Načteno {len(pdf_files)} PDF souborů")
+    tasks = [(pdf_file, output_dir) for pdf_file in pdf_files]
 
     with Pool(processes=cpu_count()) as pool:
-        results = list(tqdm(pool.imap(process_pdf, pdf_files), total=len(pdf_files), desc="Zpracování PDF"))
+        results = list(tqdm(pool.imap(process_pdf, tasks), total=len(tasks), desc="Zpracování PDF"))
 
     print("\n".join(results))
     print("Vše hotovo!")
