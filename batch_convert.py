@@ -7,29 +7,23 @@ from tkinter import filedialog, messagebox
 from tqdm import tqdm
 import sys
 
-root = tk.Tk()
-root.withdraw()
-
 # function for path selection dialog
 def vyber_slozku(popis):
+    root = tk.Tk()
+    root.withdraw()
+    
     while True:
         cesta = filedialog.askdirectory(title=popis)
 
         if cesta:
+            root.destroy()
             return cesta
         else:
             volba = messagebox.askyesno("Nebyla vybrána složka", "Chcete složku vybrat znovu?")
             if not volba:
                 print("Program ukončen.")
+                root.destroy()
                 sys.exit(0)
-
-# paths
-input_path = vyber_slozku("Vyberte vstupní složku")
-output_path = vyber_slozku("Vyberte výstupní složku")
-
-input_dir = Path(input_path)
-output_dir = Path(output_path)
-output_dir.mkdir(exist_ok=True)
 
 # function to convert pdfs to pngs
 def process_pdf(pdf_file: Path):
@@ -48,6 +42,13 @@ def process_pdf(pdf_file: Path):
 
 # main logic
 if __name__ == "__main__":
+    input_path = vyber_slozku("Vyberte vstupní složku")
+    output_path = vyber_slozku("Vyberte výstupní složku")
+
+    input_dir = Path(input_path)
+    output_dir = Path(output_path)
+    output_dir.mkdir(exist_ok=True)
+    
     pdf_files = list(input_dir.glob("*.pdf"))
     print(f"Načteno {len(pdf_files)} PDF souborů")
 
@@ -56,5 +57,3 @@ if __name__ == "__main__":
 
     print("\n".join(results))
     print("Vše hotovo!")
-
-root.destroy()

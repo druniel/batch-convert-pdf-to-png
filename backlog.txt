@@ -1,0 +1,2 @@
+-nekonečně se otvírá vstupní výstupní složka zatímco program běží
+-pokud je v mp3 na konci a třeba, tak mi to nakopčí dostejného čísla bez a
