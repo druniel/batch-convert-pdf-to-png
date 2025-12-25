@@ -55,7 +55,7 @@ if __name__ == "__main__":
     tasks = [(pdf_file, output_dir) for pdf_file in pdf_files]
 
     with Pool(processes=cpu_count()) as pool:
-        results = list(tqdm(pool.imap(process_pdf, tasks), total=len(tasks), desc="Zpracování PDF"))
+        results = list(tqdm(pool.imap_unordered(process_pdf, tasks, chunksize=1), total=len(tasks), desc="Zpracování PDF"))
 
     print("\n".join(results))
     print("Vše hotovo!")
